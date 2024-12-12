@@ -7,7 +7,7 @@ import PyQt5.QtCore as QtCore
 import PIL
 
 
-from Compressor import compress_img
+import Compressor
 from ImageViewer import QImageViewer
 
 
@@ -15,6 +15,8 @@ class AppUI(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
+        self.compressor = Compressor.Compressor()
+
         try:
             self.setWindowTitle("Image Compressor")
             self.setGeometry(200, 200, 800, 600)
@@ -68,6 +70,7 @@ class AppUI(QtWidgets.QWidget):
         self.layout.addWidget(self.output_text)
 
         self.image_viewer = QImageViewer()
+
         self.setLayout(self.layout)
 
         self.browse_btn.clicked.connect(self.browse)
@@ -105,8 +108,8 @@ class AppUI(QtWidgets.QWidget):
         to_jpg = self.to_jpg.isChecked()
 
         try:
-            data = compress_img(image_path, resize_ratio,
-                                quality, 0, 0, to_jpg)
+            data = self.compressor.compress_img(image_path, resize_ratio,
+                                                quality, 0, 0, to_jpg)
 
             self.output_text.setText(
 
@@ -124,9 +127,6 @@ if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    app_icon = QtGui.QIcon()
-    app_icon.addFile('icon.png')
-    app.setWindowIcon(app_icon)
 
     window = AppUI()
     window.show()
