@@ -42,7 +42,7 @@ class AppUI(QtWidgets.QWidget):
         self.quality_spin.setRange(0, 95)
         self.quality_spin.setValue(90)
         self.size_spin = QtWidgets.QSpinBox()
-        self.size_spin.setRange(1, 10)
+        self.size_spin.setRange(2, 5)
         self.size_spin.setValue(3)
         self.resize_label = QtWidgets.QLabel("Resize Ratio:")
         self.resize_spin = QtWidgets.QDoubleSpinBox()
@@ -116,8 +116,11 @@ class AppUI(QtWidgets.QWidget):
     def noise_reduction(self):
         # pass
         image_path = self.image_path.text()
+
+        size_of_filter = int(self.size_spin.value())
+
         try:
-            data = reduce_noise(image_path, 2)
+            data = reduce_noise(image_path, size_of_filter)
 
             self.output_text.setText(
                 f"Image Saved To: {data['Path']}\nMessage: {data['Message']}")

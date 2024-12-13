@@ -38,7 +38,7 @@ def _random():
 #         print(f"Error: {e}")
 
 
-def reduce_noise(image_abs_path, xxx=None):
+def reduce_noise(image_abs_path, xxx=2):
 
     try:
         # Open the image
@@ -46,7 +46,7 @@ def reduce_noise(image_abs_path, xxx=None):
 
         # Apply Gaussian blur to reduce noise
         blurred_image = image.filter(
-            ImageFilter.MedianFilter(size=5))
+            ImageFilter.MedianFilter(size=3))
         # print("Image denoised")
         # Save the denoised image
         image_ext = image_abs_path.split('.')[-1]
