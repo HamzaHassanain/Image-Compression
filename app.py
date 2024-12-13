@@ -4,10 +4,12 @@ import PyQt5.QtWidgets as QtWidgets
 import PyQt5.QtGui as QtGui
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
+from time import sleep
 import PIL
 
-
+from NoiseReducer import reduce_noise
 import Compressor
+
 from ImageViewer import QImageViewer
 
 
@@ -32,10 +34,16 @@ class AppUI(QtWidgets.QWidget):
         self.image_label = QtWidgets.QLabel("Image Path:")
         self.image_path = QtWidgets.QLineEdit()
         self.browse_btn = QtWidgets.QPushButton("Browse")
-        self.quality_label = QtWidgets.QLabel("Quality:")
+        self.quality_label = QtWidgets.QLabel(
+            "Quality (For Compression Only):")
+        self.size_label = QtWidgets.QLabel(
+            "Filter Size (For Noise Reduction Only):")
         self.quality_spin = QtWidgets.QSpinBox()
         self.quality_spin.setRange(0, 95)
         self.quality_spin.setValue(90)
+        self.size_spin = QtWidgets.QSpinBox()
+        self.size_spin.setRange(1, 10)
+        self.size_spin.setValue(3)
         self.resize_label = QtWidgets.QLabel("Resize Ratio:")
         self.resize_spin = QtWidgets.QDoubleSpinBox()
         self.resize_spin.setRange(0, 1)
@@ -46,6 +54,8 @@ class AppUI(QtWidgets.QWidget):
         # self.height_spin = QtWidgets.QSpinBox()
         self.to_jpg = QtWidgets.QCheckBox("Convert to JPEG")
         self.compress_btn = QtWidgets.QPushButton("Compress")
+        self.noiseReduction_btn = QtWidgets.QPushButton("Noise Reduction")
+
         self.output_label = QtWidgets.QLabel("Output:")
         self.output_text = QtWidgets.QTextEdit()
         self.output_text.setReadOnly(True)
@@ -58,6 +68,8 @@ class AppUI(QtWidgets.QWidget):
 
         self.layout.addWidget(self.quality_label)
         self.layout.addWidget(self.quality_spin)
+        self.layout.addWidget(self.size_label)
+        self.layout.addWidget(self.size_spin)
         self.layout.addWidget(self.resize_label)
         self.layout.addWidget(self.resize_spin)
         # self.layout.addWidget(self.width_label)
@@ -66,6 +78,13 @@ class AppUI(QtWidgets.QWidget):
         # self.layout.addWidget(self.height_spin)
         self.layout.addWidget(self.to_jpg)
         self.layout.addWidget(self.compress_btn)
+
+        # add some space
+
+        self.layout.addSpacing(10)
+
+        self.layout.addWidget(self.noiseReduction_btn)
+
         self.layout.addWidget(self.output_label)
         self.layout.addWidget(self.output_text)
 
@@ -75,6 +94,7 @@ class AppUI(QtWidgets.QWidget):
 
         self.browse_btn.clicked.connect(self.browse)
         self.compress_btn.clicked.connect(self.compress)
+        self.noiseReduction_btn.clicked.connect(self.noise_reduction)
 
     def browse(self):
         # file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
@@ -92,6 +112,28 @@ class AppUI(QtWidgets.QWidget):
             self.image_viewer.open(file_name)
         else:
             pass
+
+    def noise_reduction(self):
+        # pass
+        image_path = self.image_path.text()
+        try:
+            data = reduce_noise(image_path, 2)
+
+            self.output_text.setText(
+                f"Image Saved To: {data['Path']}\nMessage: {data['Message']}")
+
+            # open the image in the image viewer
+
+            # check if the image viewr is already open then close it
+            self.image_viewer.close()
+            sleep(1)
+            self.image_viewer.show()
+            self.image_viewer.open(data['Path'])
+
+        except Exception as e:
+            self.output_text.setText(f"Error: {str(e)}")
+
+        self.image_path.clear
 
     def compress(self):
 

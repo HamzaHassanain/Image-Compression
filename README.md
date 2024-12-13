@@ -46,6 +46,7 @@ This project implements an image compression application with a graphical user i
 - **App.py**: The main application that defines the GUI and handles user interactions.
 - **Compressor.py**: Provides image compression functionality.
 - **ImageViewer.py**: A utility to display and interact with images.
+- **NoiseReducer.py**: A utility to reduce noise in images.
 
 ---
 
@@ -81,10 +82,17 @@ Represents the main window of the application.
   - **Parameters:** None
 
 - **`compress(self)`**
+
   - Reads user-specified parameters and compresses the selected image using the `Compressor` class.
   - Displays compression results (file path, size before/after, and size change) in the output text box.
   - **Parameters:** None
   - **Handles:** Exceptions during compression.
+
+- **`noise_reduction`**
+  - Reduces noise in the selected image using the `NoiseReducer` class.
+  - Displays the denoised image in the viewer.
+  - **Parameters:** None
+  - **Handles:** Exceptions during noise reduction.
 
 ---
 
@@ -199,6 +207,23 @@ A PyQt5-based image viewer window.
     - `factor` (float): Scaling factor.
 
 ---
+
+## `NoiseReducer.py`
+
+This file provides functionality for reducing noise in images, using Median Filtering
+
+### **Function: **
+
+- **`reduce_noise(image_abs_path, redcution_factor=2)`**
+
+  - Reduces noise in an image using Gaussian blur.
+  - **Parameters:**
+    - `image_abs_path` (str): Path to the input image.
+    - `redcution_factor` (int): Factor for Gaussian blur (default: 2).
+  - **Returns:** A dictionary containing:
+    - `Message`: Status message.
+    - `Path`: Path to the denoised image.
+  - **Raises:** Exception if an error occurs during noise reduction.
 
 ## Usage Instructions
 
